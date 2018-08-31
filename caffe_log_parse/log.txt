@@ -1,0 +1,1125 @@
+I0823 15:23:35.806032 39958 caffe.cpp:204] Using GPUs 0
+I0823 15:23:35.825834 39958 caffe.cpp:209] GPU 0: Tesla P40
+I0823 15:23:36.339602 39958 solver.cpp:45] Initializing solver from parameters: 
+test_iter: 100
+test_interval: 500
+base_lr: 0.01
+display: 100
+max_iter: 10000
+lr_policy: "inv"
+gamma: 0.0001
+power: 0.75
+momentum: 0.9
+weight_decay: 0.0005
+snapshot: 5000
+snapshot_prefix: "examples/mnist/lenet"
+solver_mode: GPU
+device_id: 0
+net: "examples/mnist/lenet_train_test.prototxt"
+train_state {
+  level: 0
+  stage: ""
+}
+I0823 15:23:36.339915 39958 solver.cpp:102] Creating training net from net file: examples/mnist/lenet_train_test.prototxt
+I0823 15:23:36.340498 39958 net.cpp:294] The NetState phase (0) differed from the phase (1) specified by a rule in layer mnist
+I0823 15:23:36.340533 39958 net.cpp:294] The NetState phase (0) differed from the phase (1) specified by a rule in layer accuracy
+I0823 15:23:36.340626 39958 net.cpp:51] Initializing net from parameters: 
+name: "LeNet"
+state {
+  phase: TRAIN
+  level: 0
+  stage: ""
+}
+layer {
+  name: "mnist"
+  type: "Data"
+  top: "data"
+  top: "label"
+  include {
+    phase: TRAIN
+  }
+  transform_param {
+    scale: 0.00390625
+  }
+  data_param {
+    source: "examples/mnist/mnist_train_lmdb"
+    batch_size: 64
+    backend: LMDB
+  }
+}
+layer {
+  name: "conv1"
+  type: "Convolution"
+  bottom: "data"
+  top: "conv1"
+  param {
+    lr_mult: 1
+  }
+  param {
+    lr_mult: 2
+  }
+  convolution_param {
+    num_output: 20
+    kernel_size: 5
+    stride: 1
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "pool1"
+  type: "Pooling"
+  bottom: "conv1"
+  top: "pool1"
+  pooling_param {
+    pool: MAX
+    kernel_size: 2
+    stride: 2
+  }
+}
+layer {
+  name: "conv2"
+  type: "Convolution"
+  bottom: "pool1"
+  top: "conv2"
+  param {
+    lr_mult: 1
+  }
+  param {
+    lr_mult: 2
+  }
+  convolution_param {
+    num_output: 50
+    kernel_size: 5
+    stride: 1
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "pool2"
+  type: "Pooling"
+  bottom: "conv2"
+  top: "pool2"
+  pooling_param {
+    pool: MAX
+    kernel_size: 2
+    stride: 2
+  }
+}
+layer {
+  name: "ip1"
+  type: "InnerProduct"
+  bottom: "pool2"
+  top: "ip1"
+  param {
+    lr_mult: 1
+  }
+  param {
+    lr_mult: 2
+  }
+  inner_product_param {
+    num_output: 500
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "relu1"
+  type: "ReLU"
+  bottom: "ip1"
+  top: "ip1"
+}
+layer {
+  name: "ip2"
+  type: "InnerProduct"
+  bottom: "ip1"
+  top: "ip2"
+  param {
+    lr_mult: 1
+  }
+  param {
+    lr_mult: 2
+  }
+  inner_product_param {
+    num_output: 10
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "loss"
+  type: "SoftmaxWithLoss"
+  bottom: "ip2"
+  bottom: "label"
+  top: "loss"
+}
+I0823 15:23:36.341208 39958 layer_factory.hpp:77] Creating layer mnist
+I0823 15:23:36.341445 39958 db_lmdb.cpp:35] Opened lmdb examples/mnist/mnist_train_lmdb
+I0823 15:23:36.341513 39958 net.cpp:84] Creating Layer mnist
+I0823 15:23:36.341544 39958 net.cpp:380] mnist -> data
+I0823 15:23:36.341701 39958 net.cpp:380] mnist -> label
+I0823 15:23:36.343536 39958 data_layer.cpp:45] output data size: 64,1,28,28
+I0823 15:23:36.345976 39958 base_data_layer.cpp:72] Initializing prefetch
+I0823 15:23:36.346181 39958 base_data_layer.cpp:75] Prefetch initialized.
+I0823 15:23:36.346194 39958 net.cpp:122] Setting up mnist
+I0823 15:23:36.346222 39958 net.cpp:129] Top shape: 64 1 28 28 (50176)
+I0823 15:23:36.346232 39958 net.cpp:129] Top shape: 64 (64)
+I0823 15:23:36.346236 39958 net.cpp:137] Memory required for data: 200960
+I0823 15:23:36.346259 39958 layer_factory.hpp:77] Creating layer conv1
+I0823 15:23:36.346315 39958 net.cpp:84] Creating Layer conv1
+I0823 15:23:36.346339 39958 net.cpp:406] conv1 <- data
+I0823 15:23:36.346392 39958 net.cpp:380] conv1 -> conv1
+I0823 15:23:37.272191 39958 cudnn_conv_layer.cpp:194] Reallocating workspace storage: 17882112
+I0823 15:23:37.272652 39958 net.cpp:122] Setting up conv1
+I0823 15:23:37.272688 39958 net.cpp:129] Top shape: 64 20 24 24 (737280)
+I0823 15:23:37.272717 39958 net.cpp:137] Memory required for data: 3150080
+I0823 15:23:37.272843 39958 layer_factory.hpp:77] Creating layer pool1
+I0823 15:23:37.272904 39958 net.cpp:84] Creating Layer pool1
+I0823 15:23:37.272922 39958 net.cpp:406] pool1 <- conv1
+I0823 15:23:37.272953 39958 net.cpp:380] pool1 -> pool1
+I0823 15:23:37.273054 39958 net.cpp:122] Setting up pool1
+I0823 15:23:37.273072 39958 net.cpp:129] Top shape: 64 20 12 12 (184320)
+I0823 15:23:37.273077 39958 net.cpp:137] Memory required for data: 3887360
+I0823 15:23:37.273084 39958 layer_factory.hpp:77] Creating layer conv2
+I0823 15:23:37.273124 39958 net.cpp:84] Creating Layer conv2
+I0823 15:23:37.273134 39958 net.cpp:406] conv2 <- pool1
+I0823 15:23:37.273159 39958 net.cpp:380] conv2 -> conv2
+I0823 15:23:37.276633 39958 cudnn_conv_layer.cpp:194] Reallocating workspace storage: 10272
+I0823 15:23:37.276662 39958 net.cpp:122] Setting up conv2
+I0823 15:23:37.276674 39958 net.cpp:129] Top shape: 64 50 8 8 (204800)
+I0823 15:23:37.276680 39958 net.cpp:137] Memory required for data: 4706560
+I0823 15:23:37.276710 39958 layer_factory.hpp:77] Creating layer pool2
+I0823 15:23:37.276733 39958 net.cpp:84] Creating Layer pool2
+I0823 15:23:37.276744 39958 net.cpp:406] pool2 <- conv2
+I0823 15:23:37.276767 39958 net.cpp:380] pool2 -> pool2
+I0823 15:23:37.276836 39958 net.cpp:122] Setting up pool2
+I0823 15:23:37.276849 39958 net.cpp:129] Top shape: 64 50 4 4 (51200)
+I0823 15:23:37.276854 39958 net.cpp:137] Memory required for data: 4911360
+I0823 15:23:37.276861 39958 layer_factory.hpp:77] Creating layer ip1
+I0823 15:23:37.276901 39958 net.cpp:84] Creating Layer ip1
+I0823 15:23:37.276911 39958 net.cpp:406] ip1 <- pool2
+I0823 15:23:37.276934 39958 net.cpp:380] ip1 -> ip1
+I0823 15:23:37.303931 39958 net.cpp:122] Setting up ip1
+I0823 15:23:37.303952 39958 net.cpp:129] Top shape: 64 500 (32000)
+I0823 15:23:37.303957 39958 net.cpp:137] Memory required for data: 5039360
+I0823 15:23:37.303987 39958 layer_factory.hpp:77] Creating layer relu1
+I0823 15:23:37.304018 39958 net.cpp:84] Creating Layer relu1
+I0823 15:23:37.304028 39958 net.cpp:406] relu1 <- ip1
+I0823 15:23:37.304046 39958 net.cpp:367] relu1 -> ip1 (in-place)
+I0823 15:23:37.304932 39958 net.cpp:122] Setting up relu1
+I0823 15:23:37.304949 39958 net.cpp:129] Top shape: 64 500 (32000)
+I0823 15:23:37.304955 39958 net.cpp:137] Memory required for data: 5167360
+I0823 15:23:37.304961 39958 layer_factory.hpp:77] Creating layer ip2
+I0823 15:23:37.304985 39958 net.cpp:84] Creating Layer ip2
+I0823 15:23:37.304996 39958 net.cpp:406] ip2 <- ip1
+I0823 15:23:37.305022 39958 net.cpp:380] ip2 -> ip2
+I0823 15:23:37.307077 39958 net.cpp:122] Setting up ip2
+I0823 15:23:37.307096 39958 net.cpp:129] Top shape: 64 10 (640)
+I0823 15:23:37.307102 39958 net.cpp:137] Memory required for data: 5169920
+I0823 15:23:37.307118 39958 layer_factory.hpp:77] Creating layer loss
+I0823 15:23:37.307154 39958 net.cpp:84] Creating Layer loss
+I0823 15:23:37.307164 39958 net.cpp:406] loss <- ip2
+I0823 15:23:37.307181 39958 net.cpp:406] loss <- label
+I0823 15:23:37.307199 39958 net.cpp:380] loss -> loss
+I0823 15:23:37.307235 39958 layer_factory.hpp:77] Creating layer loss
+I0823 15:23:37.307744 39958 net.cpp:122] Setting up loss
+I0823 15:23:37.307761 39958 net.cpp:129] Top shape: (1)
+I0823 15:23:37.307765 39958 net.cpp:132]     with loss weight 1
+I0823 15:23:37.307797 39958 net.cpp:137] Memory required for data: 5169924
+I0823 15:23:37.307807 39958 net.cpp:198] loss needs backward computation.
+I0823 15:23:37.307818 39958 net.cpp:198] ip2 needs backward computation.
+I0823 15:23:37.307826 39958 net.cpp:198] relu1 needs backward computation.
+I0823 15:23:37.307829 39958 net.cpp:198] ip1 needs backward computation.
+I0823 15:23:37.307835 39958 net.cpp:198] pool2 needs backward computation.
+I0823 15:23:37.307842 39958 net.cpp:198] conv2 needs backward computation.
+I0823 15:23:37.307848 39958 net.cpp:198] pool1 needs backward computation.
+I0823 15:23:37.307854 39958 net.cpp:198] conv1 needs backward computation.
+I0823 15:23:37.307862 39958 net.cpp:200] mnist does not need backward computation.
+I0823 15:23:37.307885 39958 net.cpp:242] This network produces output loss
+I0823 15:23:37.307917 39958 net.cpp:255] Network initialization done.
+I0823 15:23:37.308317 39958 solver.cpp:190] Creating test net (#0) specified by net file: examples/mnist/lenet_train_test.prototxt
+I0823 15:23:37.308390 39958 net.cpp:294] The NetState phase (1) differed from the phase (0) specified by a rule in layer mnist
+I0823 15:23:37.308513 39958 net.cpp:51] Initializing net from parameters: 
+name: "LeNet"
+state {
+  phase: TEST
+}
+layer {
+  name: "mnist"
+  type: "Data"
+  top: "data"
+  top: "label"
+  include {
+    phase: TEST
+  }
+  transform_param {
+    scale: 0.00390625
+  }
+  data_param {
+    source: "examples/mnist/mnist_test_lmdb"
+    batch_size: 100
+    backend: LMDB
+  }
+}
+layer {
+  name: "conv1"
+  type: "Convolution"
+  bottom: "data"
+  top: "conv1"
+  param {
+    lr_mult: 1
+  }
+  param {
+    lr_mult: 2
+  }
+  convolution_param {
+    num_output: 20
+    kernel_size: 5
+    stride: 1
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "pool1"
+  type: "Pooling"
+  bottom: "conv1"
+  top: "pool1"
+  pooling_param {
+    pool: MAX
+    kernel_size: 2
+    stride: 2
+  }
+}
+layer {
+  name: "conv2"
+  type: "Convolution"
+  bottom: "pool1"
+  top: "conv2"
+  param {
+    lr_mult: 1
+  }
+  param {
+    lr_mult: 2
+  }
+  convolution_param {
+    num_output: 50
+    kernel_size: 5
+    stride: 1
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "pool2"
+  type: "Pooling"
+  bottom: "conv2"
+  top: "pool2"
+  pooling_param {
+    pool: MAX
+    kernel_size: 2
+    stride: 2
+  }
+}
+layer {
+  name: "ip1"
+  type: "InnerProduct"
+  bottom: "pool2"
+  top: "ip1"
+  param {
+    lr_mult: 1
+  }
+  param {
+    lr_mult: 2
+  }
+  inner_product_param {
+    num_output: 500
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "relu1"
+  type: "ReLU"
+  bottom: "ip1"
+  top: "ip1"
+}
+layer {
+  name: "ip2"
+  type: "InnerProduct"
+  bottom: "ip1"
+  top: "ip2"
+  param {
+    lr_mult: 1
+  }
+  param {
+    lr_mult: 2
+  }
+  inner_product_param {
+    num_output: 10
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "accuracy"
+  type: "Accuracy"
+  bottom: "ip2"
+  bottom: "label"
+  top: "accuracy"
+  include {
+    phase: TEST
+  }
+}
+layer {
+  name: "loss"
+  type: "SoftmaxWithLoss"
+  bottom: "ip2"
+  bottom: "label"
+  top: "loss"
+}
+I0823 15:23:37.308782 39958 layer_factory.hpp:77] Creating layer mnist
+I0823 15:23:37.308899 39958 db_lmdb.cpp:35] Opened lmdb examples/mnist/mnist_test_lmdb
+I0823 15:23:37.308928 39958 net.cpp:84] Creating Layer mnist
+I0823 15:23:37.308945 39958 net.cpp:380] mnist -> data
+I0823 15:23:37.308980 39958 net.cpp:380] mnist -> label
+I0823 15:23:37.309134 39958 data_layer.cpp:45] output data size: 100,1,28,28
+I0823 15:23:37.311775 39958 base_data_layer.cpp:72] Initializing prefetch
+I0823 15:23:37.311872 39958 base_data_layer.cpp:75] Prefetch initialized.
+I0823 15:23:37.311880 39958 net.cpp:122] Setting up mnist
+I0823 15:23:37.311889 39958 net.cpp:129] Top shape: 100 1 28 28 (78400)
+I0823 15:23:37.311897 39958 net.cpp:129] Top shape: 100 (100)
+I0823 15:23:37.311902 39958 net.cpp:137] Memory required for data: 314000
+I0823 15:23:37.311913 39958 layer_factory.hpp:77] Creating layer label_mnist_1_split
+I0823 15:23:37.311944 39958 net.cpp:84] Creating Layer label_mnist_1_split
+I0823 15:23:37.311956 39958 net.cpp:406] label_mnist_1_split <- label
+I0823 15:23:37.311980 39958 net.cpp:380] label_mnist_1_split -> label_mnist_1_split_0
+I0823 15:23:37.312006 39958 net.cpp:380] label_mnist_1_split -> label_mnist_1_split_1
+I0823 15:23:37.312224 39958 net.cpp:122] Setting up label_mnist_1_split
+I0823 15:23:37.312265 39958 net.cpp:129] Top shape: 100 (100)
+I0823 15:23:37.312274 39958 net.cpp:129] Top shape: 100 (100)
+I0823 15:23:37.312278 39958 net.cpp:137] Memory required for data: 314800
+I0823 15:23:37.312328 39958 layer_factory.hpp:77] Creating layer conv1
+I0823 15:23:37.312405 39958 net.cpp:84] Creating Layer conv1
+I0823 15:23:37.312422 39958 net.cpp:406] conv1 <- data
+I0823 15:23:37.312466 39958 net.cpp:380] conv1 -> conv1
+I0823 15:23:37.314957 39958 cudnn_conv_layer.cpp:194] Reallocating workspace storage: 17772
+I0823 15:23:37.314990 39958 net.cpp:122] Setting up conv1
+I0823 15:23:37.315002 39958 net.cpp:129] Top shape: 100 20 24 24 (1152000)
+I0823 15:23:37.315008 39958 net.cpp:137] Memory required for data: 4922800
+I0823 15:23:37.315047 39958 layer_factory.hpp:77] Creating layer pool1
+I0823 15:23:37.315076 39958 net.cpp:84] Creating Layer pool1
+I0823 15:23:37.315088 39958 net.cpp:406] pool1 <- conv1
+I0823 15:23:37.315107 39958 net.cpp:380] pool1 -> pool1
+I0823 15:23:37.315192 39958 net.cpp:122] Setting up pool1
+I0823 15:23:37.315207 39958 net.cpp:129] Top shape: 100 20 12 12 (288000)
+I0823 15:23:37.315212 39958 net.cpp:137] Memory required for data: 6074800
+I0823 15:23:37.315218 39958 layer_factory.hpp:77] Creating layer conv2
+I0823 15:23:37.315249 39958 net.cpp:84] Creating Layer conv2
+I0823 15:23:37.315263 39958 net.cpp:406] conv2 <- pool1
+I0823 15:23:37.315290 39958 net.cpp:380] conv2 -> conv2
+I0823 15:23:37.319648 39958 cudnn_conv_layer.cpp:194] Reallocating workspace storage: 10272
+I0823 15:23:37.319680 39958 net.cpp:122] Setting up conv2
+I0823 15:23:37.319692 39958 net.cpp:129] Top shape: 100 50 8 8 (320000)
+I0823 15:23:37.319700 39958 net.cpp:137] Memory required for data: 7354800
+I0823 15:23:37.319728 39958 layer_factory.hpp:77] Creating layer pool2
+I0823 15:23:37.319754 39958 net.cpp:84] Creating Layer pool2
+I0823 15:23:37.319764 39958 net.cpp:406] pool2 <- conv2
+I0823 15:23:37.319787 39958 net.cpp:380] pool2 -> pool2
+I0823 15:23:37.319867 39958 net.cpp:122] Setting up pool2
+I0823 15:23:37.319880 39958 net.cpp:129] Top shape: 100 50 4 4 (80000)
+I0823 15:23:37.319886 39958 net.cpp:137] Memory required for data: 7674800
+I0823 15:23:37.319895 39958 layer_factory.hpp:77] Creating layer ip1
+I0823 15:23:37.319916 39958 net.cpp:84] Creating Layer ip1
+I0823 15:23:37.319926 39958 net.cpp:406] ip1 <- pool2
+I0823 15:23:37.319952 39958 net.cpp:380] ip1 -> ip1
+I0823 15:23:37.346596 39958 net.cpp:122] Setting up ip1
+I0823 15:23:37.346614 39958 net.cpp:129] Top shape: 100 500 (50000)
+I0823 15:23:37.346618 39958 net.cpp:137] Memory required for data: 7874800
+I0823 15:23:37.346647 39958 layer_factory.hpp:77] Creating layer relu1
+I0823 15:23:37.346669 39958 net.cpp:84] Creating Layer relu1
+I0823 15:23:37.346680 39958 net.cpp:406] relu1 <- ip1
+I0823 15:23:37.346699 39958 net.cpp:367] relu1 -> ip1 (in-place)
+I0823 15:23:37.347102 39958 net.cpp:122] Setting up relu1
+I0823 15:23:37.347116 39958 net.cpp:129] Top shape: 100 500 (50000)
+I0823 15:23:37.347121 39958 net.cpp:137] Memory required for data: 8074800
+I0823 15:23:37.347128 39958 layer_factory.hpp:77] Creating layer ip2
+I0823 15:23:37.347158 39958 net.cpp:84] Creating Layer ip2
+I0823 15:23:37.347169 39958 net.cpp:406] ip2 <- ip1
+I0823 15:23:37.347196 39958 net.cpp:380] ip2 -> ip2
+I0823 15:23:37.347705 39958 net.cpp:122] Setting up ip2
+I0823 15:23:37.347719 39958 net.cpp:129] Top shape: 100 10 (1000)
+I0823 15:23:37.347724 39958 net.cpp:137] Memory required for data: 8078800
+I0823 15:23:37.347739 39958 layer_factory.hpp:77] Creating layer ip2_ip2_0_split
+I0823 15:23:37.347755 39958 net.cpp:84] Creating Layer ip2_ip2_0_split
+I0823 15:23:37.347764 39958 net.cpp:406] ip2_ip2_0_split <- ip2
+I0823 15:23:37.347784 39958 net.cpp:380] ip2_ip2_0_split -> ip2_ip2_0_split_0
+I0823 15:23:37.347806 39958 net.cpp:380] ip2_ip2_0_split -> ip2_ip2_0_split_1
+I0823 15:23:37.347867 39958 net.cpp:122] Setting up ip2_ip2_0_split
+I0823 15:23:37.347878 39958 net.cpp:129] Top shape: 100 10 (1000)
+I0823 15:23:37.347885 39958 net.cpp:129] Top shape: 100 10 (1000)
+I0823 15:23:37.347888 39958 net.cpp:137] Memory required for data: 8086800
+I0823 15:23:37.347894 39958 layer_factory.hpp:77] Creating layer accuracy
+I0823 15:23:37.347919 39958 net.cpp:84] Creating Layer accuracy
+I0823 15:23:37.347929 39958 net.cpp:406] accuracy <- ip2_ip2_0_split_0
+I0823 15:23:37.347961 39958 net.cpp:406] accuracy <- label_mnist_1_split_0
+I0823 15:23:37.347980 39958 net.cpp:380] accuracy -> accuracy
+I0823 15:23:37.348008 39958 net.cpp:122] Setting up accuracy
+I0823 15:23:37.348019 39958 net.cpp:129] Top shape: (1)
+I0823 15:23:37.348023 39958 net.cpp:137] Memory required for data: 8086804
+I0823 15:23:37.348031 39958 layer_factory.hpp:77] Creating layer loss
+I0823 15:23:37.348044 39958 net.cpp:84] Creating Layer loss
+I0823 15:23:37.348053 39958 net.cpp:406] loss <- ip2_ip2_0_split_1
+I0823 15:23:37.348067 39958 net.cpp:406] loss <- label_mnist_1_split_1
+I0823 15:23:37.348078 39958 net.cpp:380] loss -> loss
+I0823 15:23:37.348098 39958 layer_factory.hpp:77] Creating layer loss
+I0823 15:23:37.349139 39958 net.cpp:122] Setting up loss
+I0823 15:23:37.349155 39958 net.cpp:129] Top shape: (1)
+I0823 15:23:37.349160 39958 net.cpp:132]     with loss weight 1
+I0823 15:23:37.349172 39958 net.cpp:137] Memory required for data: 8086808
+I0823 15:23:37.349182 39958 net.cpp:198] loss needs backward computation.
+I0823 15:23:37.349193 39958 net.cpp:200] accuracy does not need backward computation.
+I0823 15:23:37.349201 39958 net.cpp:198] ip2_ip2_0_split needs backward computation.
+I0823 15:23:37.349210 39958 net.cpp:198] ip2 needs backward computation.
+I0823 15:23:37.349216 39958 net.cpp:198] relu1 needs backward computation.
+I0823 15:23:37.349220 39958 net.cpp:198] ip1 needs backward computation.
+I0823 15:23:37.349225 39958 net.cpp:198] pool2 needs backward computation.
+I0823 15:23:37.349231 39958 net.cpp:198] conv2 needs backward computation.
+I0823 15:23:37.349237 39958 net.cpp:198] pool1 needs backward computation.
+I0823 15:23:37.349243 39958 net.cpp:198] conv1 needs backward computation.
+I0823 15:23:37.349249 39958 net.cpp:200] label_mnist_1_split does not need backward computation.
+I0823 15:23:37.349257 39958 net.cpp:200] mnist does not need backward computation.
+I0823 15:23:37.349262 39958 net.cpp:242] This network produces output accuracy
+I0823 15:23:37.349272 39958 net.cpp:242] This network produces output loss
+I0823 15:23:37.349304 39958 net.cpp:255] Network initialization done.
+I0823 15:23:37.349386 39958 solver.cpp:57] Solver scaffolding done.
+I0823 15:23:37.349812 39958 caffe.cpp:239] Starting Optimization
+I0823 15:23:37.349822 39958 solver.cpp:293] Solving LeNet
+I0823 15:23:37.349825 39958 solver.cpp:294] Learning Rate Policy: inv
+I0823 15:23:37.350672 39958 solver.cpp:351] Iteration 0, Testing net (#0)
+I0823 15:23:37.350693 39958 net.cpp:679] Copying source layer mnist
+I0823 15:23:37.350699 39958 net.cpp:679] Copying source layer conv1
+I0823 15:23:37.350757 39958 net.cpp:679] Copying source layer pool1
+I0823 15:23:37.350764 39958 net.cpp:679] Copying source layer conv2
+I0823 15:23:37.350800 39958 net.cpp:679] Copying source layer pool2
+I0823 15:23:37.350806 39958 net.cpp:679] Copying source layer ip1
+I0823 15:23:37.351356 39958 net.cpp:679] Copying source layer relu1
+I0823 15:23:37.351366 39958 net.cpp:679] Copying source layer ip2
+I0823 15:23:37.351403 39958 net.cpp:679] Copying source layer loss
+I0823 15:23:37.361331 39958 blocking_queue.cpp:49] Waiting for data
+I0823 15:23:37.536953 39972 data_layer.cpp:73] Restarting data prefetching from start.
+I0823 15:23:37.538223 39958 solver.cpp:418]     Test net output #0: accuracy = 0.099
+I0823 15:23:37.538254 39958 solver.cpp:418]     Test net output #1: loss = 2.37859 (* 1 = 2.37859 loss)
+I0823 15:23:37.543682 39958 solver.cpp:239] Iteration 0 (0.000113567 iter/s, 0.193807s/100 iters), loss = 2.32221
+I0823 15:23:37.543720 39958 solver.cpp:258]     Train net output #0: loss = 2.32221 (* 1 = 2.32221 loss)
+I0823 15:23:37.543750 39958 sgd_solver.cpp:112] Iteration 0, lr = 0.01
+I0823 15:23:37.863648 39958 solver.cpp:239] Iteration 100 (312.601 iter/s, 0.319897s/100 iters), loss = 0.22955
+I0823 15:23:37.863713 39958 solver.cpp:258]     Train net output #0: loss = 0.22955 (* 1 = 0.22955 loss)
+I0823 15:23:37.863734 39958 sgd_solver.cpp:112] Iteration 100, lr = 0.00992565
+I0823 15:23:38.182191 39958 solver.cpp:239] Iteration 200 (314.016 iter/s, 0.318455s/100 iters), loss = 0.14483
+I0823 15:23:38.182288 39958 solver.cpp:258]     Train net output #0: loss = 0.14483 (* 1 = 0.14483 loss)
+I0823 15:23:38.182301 39958 sgd_solver.cpp:112] Iteration 200, lr = 0.00985258
+I0823 15:23:38.795480 39958 solver.cpp:239] Iteration 300 (163.096 iter/s, 0.613134s/100 iters), loss = 0.192693
+I0823 15:23:38.795577 39958 solver.cpp:258]     Train net output #0: loss = 0.192693 (* 1 = 0.192693 loss)
+I0823 15:23:38.795598 39958 sgd_solver.cpp:112] Iteration 300, lr = 0.00978075
+I0823 15:23:39.273977 39958 solver.cpp:239] Iteration 400 (209.043 iter/s, 0.47837s/100 iters), loss = 0.0770725
+I0823 15:23:39.274046 39958 solver.cpp:258]     Train net output #0: loss = 0.0770724 (* 1 = 0.0770724 loss)
+I0823 15:23:39.274060 39958 sgd_solver.cpp:112] Iteration 400, lr = 0.00971013
+I0823 15:23:39.898319 39958 solver.cpp:351] Iteration 500, Testing net (#0)
+I0823 15:23:39.898357 39958 net.cpp:679] Copying source layer mnist
+I0823 15:23:39.898362 39958 net.cpp:679] Copying source layer conv1
+I0823 15:23:39.898370 39958 net.cpp:679] Copying source layer pool1
+I0823 15:23:39.898375 39958 net.cpp:679] Copying source layer conv2
+I0823 15:23:39.898381 39958 net.cpp:679] Copying source layer pool2
+I0823 15:23:39.898386 39958 net.cpp:679] Copying source layer ip1
+I0823 15:23:39.898392 39958 net.cpp:679] Copying source layer relu1
+I0823 15:23:39.898396 39958 net.cpp:679] Copying source layer ip2
+I0823 15:23:39.898402 39958 net.cpp:679] Copying source layer loss
+I0823 15:23:40.242522 39972 data_layer.cpp:73] Restarting data prefetching from start.
+I0823 15:23:40.297780 39958 solver.cpp:418]     Test net output #0: accuracy = 0.9699
+I0823 15:23:40.297834 39958 solver.cpp:418]     Test net output #1: loss = 0.0909824 (* 1 = 0.0909824 loss)
+I0823 15:23:40.300989 39958 solver.cpp:239] Iteration 500 (97.3812 iter/s, 1.02689s/100 iters), loss = 0.0832226
+I0823 15:23:40.301020 39958 solver.cpp:258]     Train net output #0: loss = 0.0832225 (* 1 = 0.0832225 loss)
+I0823 15:23:40.301038 39958 sgd_solver.cpp:112] Iteration 500, lr = 0.00964069
+I0823 15:23:40.833343 39958 solver.cpp:239] Iteration 600 (187.87 iter/s, 0.532284s/100 iters), loss = 0.0983126
+I0823 15:23:40.833398 39958 solver.cpp:258]     Train net output #0: loss = 0.0983125 (* 1 = 0.0983125 loss)
+I0823 15:23:40.833408 39958 sgd_solver.cpp:112] Iteration 600, lr = 0.0095724
+I0823 15:23:41.142315 39958 solver.cpp:239] Iteration 700 (323.746 iter/s, 0.308885s/100 iters), loss = 0.152886
+I0823 15:23:41.142388 39958 solver.cpp:258]     Train net output #0: loss = 0.152886 (* 1 = 0.152886 loss)
+I0823 15:23:41.142398 39958 sgd_solver.cpp:112] Iteration 700, lr = 0.00950522
+I0823 15:23:41.595978 39958 solver.cpp:239] Iteration 800 (220.479 iter/s, 0.453557s/100 iters), loss = 0.193596
+I0823 15:23:41.596031 39958 solver.cpp:258]     Train net output #0: loss = 0.193596 (* 1 = 0.193596 loss)
+I0823 15:23:41.596043 39958 sgd_solver.cpp:112] Iteration 800, lr = 0.00943913
+I0823 15:23:42.050654 39958 solver.cpp:239] Iteration 900 (219.997 iter/s, 0.454553s/100 iters), loss = 0.149313
+I0823 15:23:42.050720 39958 solver.cpp:258]     Train net output #0: loss = 0.149313 (* 1 = 0.149313 loss)
+I0823 15:23:42.050730 39958 sgd_solver.cpp:112] Iteration 900, lr = 0.00937411
+I0823 15:23:42.153151 39963 data_layer.cpp:73] Restarting data prefetching from start.
+I0823 15:23:42.355867 39958 solver.cpp:351] Iteration 1000, Testing net (#0)
+I0823 15:23:42.355892 39958 net.cpp:679] Copying source layer mnist
+I0823 15:23:42.355900 39958 net.cpp:679] Copying source layer conv1
+I0823 15:23:42.355908 39958 net.cpp:679] Copying source layer pool1
+I0823 15:23:42.355914 39958 net.cpp:679] Copying source layer conv2
+I0823 15:23:42.355921 39958 net.cpp:679] Copying source layer pool2
+I0823 15:23:42.355928 39958 net.cpp:679] Copying source layer ip1
+I0823 15:23:42.355937 39958 net.cpp:679] Copying source layer relu1
+I0823 15:23:42.355942 39958 net.cpp:679] Copying source layer ip2
+I0823 15:23:42.355948 39958 net.cpp:679] Copying source layer loss
+I0823 15:23:42.676894 39972 data_layer.cpp:73] Restarting data prefetching from start.
+I0823 15:23:42.678122 39958 solver.cpp:418]     Test net output #0: accuracy = 0.9809
+I0823 15:23:42.678154 39958 solver.cpp:418]     Test net output #1: loss = 0.0589394 (* 1 = 0.0589394 loss)
+I0823 15:23:42.681311 39958 solver.cpp:239] Iteration 1000 (158.591 iter/s, 0.630552s/100 iters), loss = 0.100756
+I0823 15:23:42.681345 39958 solver.cpp:258]     Train net output #0: loss = 0.100756 (* 1 = 0.100756 loss)
+I0823 15:23:42.681362 39958 sgd_solver.cpp:112] Iteration 1000, lr = 0.00931012
+I0823 15:23:43.131496 39958 solver.cpp:239] Iteration 1100 (222.164 iter/s, 0.450119s/100 iters), loss = 0.00702386
+I0823 15:23:43.131549 39958 solver.cpp:258]     Train net output #0: loss = 0.00702372 (* 1 = 0.00702372 loss)
+I0823 15:23:43.131559 39958 sgd_solver.cpp:112] Iteration 1100, lr = 0.00924715
+I0823 15:23:43.440300 39958 solver.cpp:239] Iteration 1200 (323.918 iter/s, 0.308721s/100 iters), loss = 0.0203073
+I0823 15:23:43.440356 39958 solver.cpp:258]     Train net output #0: loss = 0.0203072 (* 1 = 0.0203072 loss)
+I0823 15:23:43.440366 39958 sgd_solver.cpp:112] Iteration 1200, lr = 0.00918515
+I0823 15:23:43.752019 39958 solver.cpp:239] Iteration 1300 (320.887 iter/s, 0.311636s/100 iters), loss = 0.0122643
+I0823 15:23:43.752074 39958 solver.cpp:258]     Train net output #0: loss = 0.0122642 (* 1 = 0.0122642 loss)
+I0823 15:23:43.752084 39958 sgd_solver.cpp:112] Iteration 1300, lr = 0.00912412
+I0823 15:23:44.061918 39958 solver.cpp:239] Iteration 1400 (322.768 iter/s, 0.30982s/100 iters), loss = 0.00486629
+I0823 15:23:44.061970 39958 solver.cpp:258]     Train net output #0: loss = 0.0048662 (* 1 = 0.0048662 loss)
+I0823 15:23:44.061981 39958 sgd_solver.cpp:112] Iteration 1400, lr = 0.00906403
+I0823 15:23:44.511673 39958 solver.cpp:351] Iteration 1500, Testing net (#0)
+I0823 15:23:44.511713 39958 net.cpp:679] Copying source layer mnist
+I0823 15:23:44.511719 39958 net.cpp:679] Copying source layer conv1
+I0823 15:23:44.511729 39958 net.cpp:679] Copying source layer pool1
+I0823 15:23:44.511732 39958 net.cpp:679] Copying source layer conv2
+I0823 15:23:44.511739 39958 net.cpp:679] Copying source layer pool2
+I0823 15:23:44.511742 39958 net.cpp:679] Copying source layer ip1
+I0823 15:23:44.511749 39958 net.cpp:679] Copying source layer relu1
+I0823 15:23:44.511754 39958 net.cpp:679] Copying source layer ip2
+I0823 15:23:44.511759 39958 net.cpp:679] Copying source layer loss
+I0823 15:23:44.696632 39972 data_layer.cpp:73] Restarting data prefetching from start.
+I0823 15:23:44.697873 39958 solver.cpp:418]     Test net output #0: accuracy = 0.984
+I0823 15:23:44.697911 39958 solver.cpp:418]     Test net output #1: loss = 0.0483156 (* 1 = 0.0483156 loss)
+I0823 15:23:44.701079 39958 solver.cpp:239] Iteration 1500 (156.477 iter/s, 0.63907s/100 iters), loss = 0.0754063
+I0823 15:23:44.701145 39958 solver.cpp:258]     Train net output #0: loss = 0.0754062 (* 1 = 0.0754062 loss)
+I0823 15:23:44.701164 39958 sgd_solver.cpp:112] Iteration 1500, lr = 0.00900485
+I0823 15:23:45.151108 39958 solver.cpp:239] Iteration 1600 (222.256 iter/s, 0.449931s/100 iters), loss = 0.113074
+I0823 15:23:45.151162 39958 solver.cpp:258]     Train net output #0: loss = 0.113074 (* 1 = 0.113074 loss)
+I0823 15:23:45.151172 39958 sgd_solver.cpp:112] Iteration 1600, lr = 0.00894657
+I0823 15:23:45.465596 39958 solver.cpp:239] Iteration 1700 (318.06 iter/s, 0.314406s/100 iters), loss = 0.0467992
+I0823 15:23:45.465652 39958 solver.cpp:258]     Train net output #0: loss = 0.0467991 (* 1 = 0.0467991 loss)
+I0823 15:23:45.465667 39958 sgd_solver.cpp:112] Iteration 1700, lr = 0.00888916
+I0823 15:23:45.776729 39958 solver.cpp:239] Iteration 1800 (321.499 iter/s, 0.311043s/100 iters), loss = 0.0221374
+I0823 15:23:45.776798 39958 solver.cpp:258]     Train net output #0: loss = 0.0221373 (* 1 = 0.0221373 loss)
+I0823 15:23:45.776809 39958 sgd_solver.cpp:112] Iteration 1800, lr = 0.0088326
+I0823 15:23:45.998404 39963 data_layer.cpp:73] Restarting data prefetching from start.
+I0823 15:23:46.093200 39958 solver.cpp:239] Iteration 1900 (316.081 iter/s, 0.316375s/100 iters), loss = 0.122329
+I0823 15:23:46.093303 39958 solver.cpp:258]     Train net output #0: loss = 0.122328 (* 1 = 0.122328 loss)
+I0823 15:23:46.093322 39958 sgd_solver.cpp:112] Iteration 1900, lr = 0.00877687
+I0823 15:23:46.547870 39958 solver.cpp:351] Iteration 2000, Testing net (#0)
+I0823 15:23:46.547904 39958 net.cpp:679] Copying source layer mnist
+I0823 15:23:46.547910 39958 net.cpp:679] Copying source layer conv1
+I0823 15:23:46.547919 39958 net.cpp:679] Copying source layer pool1
+I0823 15:23:46.547922 39958 net.cpp:679] Copying source layer conv2
+I0823 15:23:46.547929 39958 net.cpp:679] Copying source layer pool2
+I0823 15:23:46.547933 39958 net.cpp:679] Copying source layer ip1
+I0823 15:23:46.547940 39958 net.cpp:679] Copying source layer relu1
+I0823 15:23:46.547945 39958 net.cpp:679] Copying source layer ip2
+I0823 15:23:46.547950 39958 net.cpp:679] Copying source layer loss
+I0823 15:23:46.994244 39972 data_layer.cpp:73] Restarting data prefetching from start.
+I0823 15:23:46.995481 39958 solver.cpp:418]     Test net output #0: accuracy = 0.9861
+I0823 15:23:46.995514 39958 solver.cpp:418]     Test net output #1: loss = 0.0446799 (* 1 = 0.0446799 loss)
+I0823 15:23:46.998662 39958 solver.cpp:239] Iteration 2000 (110.459 iter/s, 0.905314s/100 iters), loss = 0.0114874
+I0823 15:23:46.998695 39958 solver.cpp:258]     Train net output #0: loss = 0.0114873 (* 1 = 0.0114873 loss)
+I0823 15:23:46.998711 39958 sgd_solver.cpp:112] Iteration 2000, lr = 0.00872196
+I0823 15:23:47.455588 39958 solver.cpp:239] Iteration 2100 (218.889 iter/s, 0.456853s/100 iters), loss = 0.0192275
+I0823 15:23:47.455644 39958 solver.cpp:258]     Train net output #0: loss = 0.0192274 (* 1 = 0.0192274 loss)
+I0823 15:23:47.455655 39958 sgd_solver.cpp:112] Iteration 2100, lr = 0.00866784
+I0823 15:23:47.771404 39958 solver.cpp:239] Iteration 2200 (316.725 iter/s, 0.315732s/100 iters), loss = 0.0183206
+I0823 15:23:47.771464 39958 solver.cpp:258]     Train net output #0: loss = 0.0183205 (* 1 = 0.0183205 loss)
+I0823 15:23:47.771482 39958 sgd_solver.cpp:112] Iteration 2200, lr = 0.0086145
+I0823 15:23:48.094233 39958 solver.cpp:239] Iteration 2300 (309.835 iter/s, 0.322752s/100 iters), loss = 0.0762279
+I0823 15:23:48.094311 39958 solver.cpp:258]     Train net output #0: loss = 0.0762278 (* 1 = 0.0762278 loss)
+I0823 15:23:48.094342 39958 sgd_solver.cpp:112] Iteration 2300, lr = 0.00856192
+I0823 15:23:48.553217 39958 solver.cpp:239] Iteration 2400 (217.928 iter/s, 0.458868s/100 iters), loss = 0.0143485
+I0823 15:23:48.553273 39958 solver.cpp:258]     Train net output #0: loss = 0.0143484 (* 1 = 0.0143484 loss)
+I0823 15:23:48.553283 39958 sgd_solver.cpp:112] Iteration 2400, lr = 0.00851008
+I0823 15:23:48.869666 39958 solver.cpp:351] Iteration 2500, Testing net (#0)
+I0823 15:23:48.869693 39958 net.cpp:679] Copying source layer mnist
+I0823 15:23:48.869711 39958 net.cpp:679] Copying source layer conv1
+I0823 15:23:48.869727 39958 net.cpp:679] Copying source layer pool1
+I0823 15:23:48.869736 39958 net.cpp:679] Copying source layer conv2
+I0823 15:23:48.869746 39958 net.cpp:679] Copying source layer pool2
+I0823 15:23:48.869755 39958 net.cpp:679] Copying source layer ip1
+I0823 15:23:48.869765 39958 net.cpp:679] Copying source layer relu1
+I0823 15:23:48.869771 39958 net.cpp:679] Copying source layer ip2
+I0823 15:23:48.869776 39958 net.cpp:679] Copying source layer loss
+I0823 15:23:49.051383 39972 data_layer.cpp:73] Restarting data prefetching from start.
+I0823 15:23:49.052634 39958 solver.cpp:418]     Test net output #0: accuracy = 0.9849
+I0823 15:23:49.052665 39958 solver.cpp:418]     Test net output #1: loss = 0.0469071 (* 1 = 0.0469071 loss)
+I0823 15:23:49.055872 39958 solver.cpp:239] Iteration 2500 (198.98 iter/s, 0.502563s/100 iters), loss = 0.0399446
+I0823 15:23:49.055914 39958 solver.cpp:258]     Train net output #0: loss = 0.0399444 (* 1 = 0.0399444 loss)
+I0823 15:23:49.055928 39958 sgd_solver.cpp:112] Iteration 2500, lr = 0.00845897
+I0823 15:23:49.381209 39958 solver.cpp:239] Iteration 2600 (307.435 iter/s, 0.325272s/100 iters), loss = 0.072212
+I0823 15:23:49.381284 39958 solver.cpp:258]     Train net output #0: loss = 0.0722119 (* 1 = 0.0722119 loss)
+I0823 15:23:49.381294 39958 sgd_solver.cpp:112] Iteration 2600, lr = 0.00840857
+I0823 15:23:49.694100 39958 solver.cpp:239] Iteration 2700 (319.713 iter/s, 0.312781s/100 iters), loss = 0.0811282
+I0823 15:23:49.694164 39958 solver.cpp:258]     Train net output #0: loss = 0.0811281 (* 1 = 0.0811281 loss)
+I0823 15:23:49.694173 39958 sgd_solver.cpp:112] Iteration 2700, lr = 0.00835886
+I0823 15:23:50.002720 39958 solver.cpp:239] Iteration 2800 (324.116 iter/s, 0.308531s/100 iters), loss = 0.00431859
+I0823 15:23:50.002777 39958 solver.cpp:258]     Train net output #0: loss = 0.00431846 (* 1 = 0.00431846 loss)
+I0823 15:23:50.002787 39958 sgd_solver.cpp:112] Iteration 2800, lr = 0.00830984
+I0823 15:23:50.028429 39963 data_layer.cpp:73] Restarting data prefetching from start.
+I0823 15:23:50.602313 39958 solver.cpp:239] Iteration 2900 (166.808 iter/s, 0.599491s/100 iters), loss = 0.0190977
+I0823 15:23:50.602371 39958 solver.cpp:258]     Train net output #0: loss = 0.0190976 (* 1 = 0.0190976 loss)
+I0823 15:23:50.602382 39958 sgd_solver.cpp:112] Iteration 2900, lr = 0.00826148
+I0823 15:23:51.059253 39958 solver.cpp:351] Iteration 3000, Testing net (#0)
+I0823 15:23:51.059293 39958 net.cpp:679] Copying source layer mnist
+I0823 15:23:51.059298 39958 net.cpp:679] Copying source layer conv1
+I0823 15:23:51.059307 39958 net.cpp:679] Copying source layer pool1
+I0823 15:23:51.059311 39958 net.cpp:679] Copying source layer conv2
+I0823 15:23:51.059317 39958 net.cpp:679] Copying source layer pool2
+I0823 15:23:51.059322 39958 net.cpp:679] Copying source layer ip1
+I0823 15:23:51.059329 39958 net.cpp:679] Copying source layer relu1
+I0823 15:23:51.059332 39958 net.cpp:679] Copying source layer ip2
+I0823 15:23:51.059339 39958 net.cpp:679] Copying source layer loss
+I0823 15:23:51.281975 39972 data_layer.cpp:73] Restarting data prefetching from start.
+I0823 15:23:51.283308 39958 solver.cpp:418]     Test net output #0: accuracy = 0.9855
+I0823 15:23:51.283350 39958 solver.cpp:418]     Test net output #1: loss = 0.0423681 (* 1 = 0.0423681 loss)
+I0823 15:23:51.286465 39958 solver.cpp:239] Iteration 3000 (146.187 iter/s, 0.684056s/100 iters), loss = 0.0140651
+I0823 15:23:51.286509 39958 solver.cpp:258]     Train net output #0: loss = 0.0140649 (* 1 = 0.0140649 loss)
+I0823 15:23:51.286531 39958 sgd_solver.cpp:112] Iteration 3000, lr = 0.00821377
+I0823 15:23:51.794052 39958 solver.cpp:239] Iteration 3100 (197.04 iter/s, 0.507511s/100 iters), loss = 0.0132559
+I0823 15:23:51.794107 39958 solver.cpp:258]     Train net output #0: loss = 0.0132557 (* 1 = 0.0132557 loss)
+I0823 15:23:51.794117 39958 sgd_solver.cpp:112] Iteration 3100, lr = 0.0081667
+I0823 15:23:52.638808 39958 solver.cpp:239] Iteration 3200 (118.693 iter/s, 0.842509s/100 iters), loss = 0.00432197
+I0823 15:23:52.638869 39958 solver.cpp:258]     Train net output #0: loss = 0.00432181 (* 1 = 0.00432181 loss)
+I0823 15:23:52.638878 39958 sgd_solver.cpp:112] Iteration 3200, lr = 0.00812025
+I0823 15:23:52.960248 39958 solver.cpp:239] Iteration 3300 (311.186 iter/s, 0.321352s/100 iters), loss = 0.0413725
+I0823 15:23:52.960305 39958 solver.cpp:258]     Train net output #0: loss = 0.0413723 (* 1 = 0.0413723 loss)
+I0823 15:23:52.960314 39958 sgd_solver.cpp:112] Iteration 3300, lr = 0.00807442
+I0823 15:23:53.424141 39958 solver.cpp:239] Iteration 3400 (215.611 iter/s, 0.463799s/100 iters), loss = 0.0103858
+I0823 15:23:53.424204 39958 solver.cpp:258]     Train net output #0: loss = 0.0103857 (* 1 = 0.0103857 loss)
+I0823 15:23:53.424216 39958 sgd_solver.cpp:112] Iteration 3400, lr = 0.00802918
+I0823 15:23:53.886124 39958 solver.cpp:351] Iteration 3500, Testing net (#0)
+I0823 15:23:53.886158 39958 net.cpp:679] Copying source layer mnist
+I0823 15:23:53.886164 39958 net.cpp:679] Copying source layer conv1
+I0823 15:23:53.886174 39958 net.cpp:679] Copying source layer pool1
+I0823 15:23:53.886178 39958 net.cpp:679] Copying source layer conv2
+I0823 15:23:53.886185 39958 net.cpp:679] Copying source layer pool2
+I0823 15:23:53.886217 39958 net.cpp:679] Copying source layer ip1
+I0823 15:23:53.886229 39958 net.cpp:679] Copying source layer relu1
+I0823 15:23:53.886234 39958 net.cpp:679] Copying source layer ip2
+I0823 15:23:53.886240 39958 net.cpp:679] Copying source layer loss
+I0823 15:23:54.067405 39972 data_layer.cpp:73] Restarting data prefetching from start.
+I0823 15:23:54.068614 39958 solver.cpp:418]     Test net output #0: accuracy = 0.986
+I0823 15:23:54.068645 39958 solver.cpp:418]     Test net output #1: loss = 0.043524 (* 1 = 0.043524 loss)
+I0823 15:23:54.071705 39958 solver.cpp:239] Iteration 3500 (154.448 iter/s, 0.647467s/100 iters), loss = 0.00752071
+I0823 15:23:54.071738 39958 solver.cpp:258]     Train net output #0: loss = 0.00752053 (* 1 = 0.00752053 loss)
+I0823 15:23:54.071748 39958 sgd_solver.cpp:112] Iteration 3500, lr = 0.00798454
+I0823 15:23:54.384757 39958 solver.cpp:239] Iteration 3600 (319.499 iter/s, 0.31299s/100 iters), loss = 0.0313147
+I0823 15:23:54.384814 39958 solver.cpp:258]     Train net output #0: loss = 0.0313145 (* 1 = 0.0313145 loss)
+I0823 15:23:54.384826 39958 sgd_solver.cpp:112] Iteration 3600, lr = 0.00794046
+I0823 15:23:54.697417 39958 solver.cpp:239] Iteration 3700 (319.929 iter/s, 0.312569s/100 iters), loss = 0.0204306
+I0823 15:23:54.697480 39958 solver.cpp:258]     Train net output #0: loss = 0.0204304 (* 1 = 0.0204304 loss)
+I0823 15:23:54.697491 39958 sgd_solver.cpp:112] Iteration 3700, lr = 0.00789695
+I0823 15:23:54.837817 39963 data_layer.cpp:73] Restarting data prefetching from start.
+I0823 15:23:55.006462 39958 solver.cpp:239] Iteration 3800 (323.669 iter/s, 0.308958s/100 iters), loss = 0.0168821
+I0823 15:23:55.006520 39958 solver.cpp:258]     Train net output #0: loss = 0.0168819 (* 1 = 0.0168819 loss)
+I0823 15:23:55.006531 39958 sgd_solver.cpp:112] Iteration 3800, lr = 0.007854
+I0823 15:23:55.535267 39958 solver.cpp:239] Iteration 3900 (189.142 iter/s, 0.528705s/100 iters), loss = 0.0268301
+I0823 15:23:55.535333 39958 solver.cpp:258]     Train net output #0: loss = 0.0268298 (* 1 = 0.0268298 loss)
+I0823 15:23:55.535351 39958 sgd_solver.cpp:112] Iteration 3900, lr = 0.00781158
+I0823 15:23:56.053812 39958 solver.cpp:351] Iteration 4000, Testing net (#0)
+I0823 15:23:56.053843 39958 net.cpp:679] Copying source layer mnist
+I0823 15:23:56.053848 39958 net.cpp:679] Copying source layer conv1
+I0823 15:23:56.053855 39958 net.cpp:679] Copying source layer pool1
+I0823 15:23:56.053859 39958 net.cpp:679] Copying source layer conv2
+I0823 15:23:56.053866 39958 net.cpp:679] Copying source layer pool2
+I0823 15:23:56.053871 39958 net.cpp:679] Copying source layer ip1
+I0823 15:23:56.053879 39958 net.cpp:679] Copying source layer relu1
+I0823 15:23:56.053884 39958 net.cpp:679] Copying source layer ip2
+I0823 15:23:56.053889 39958 net.cpp:679] Copying source layer loss
+I0823 15:23:56.237056 39972 data_layer.cpp:73] Restarting data prefetching from start.
+I0823 15:23:56.238266 39958 solver.cpp:418]     Test net output #0: accuracy = 0.9885
+I0823 15:23:56.238299 39958 solver.cpp:418]     Test net output #1: loss = 0.0334551 (* 1 = 0.0334551 loss)
+I0823 15:23:56.241374 39958 solver.cpp:239] Iteration 4000 (141.643 iter/s, 0.706001s/100 iters), loss = 0.0162051
+I0823 15:23:56.241407 39958 solver.cpp:258]     Train net output #0: loss = 0.0162048 (* 1 = 0.0162048 loss)
+I0823 15:23:56.241418 39958 sgd_solver.cpp:112] Iteration 4000, lr = 0.0077697
+I0823 15:23:56.694295 39958 solver.cpp:239] Iteration 4100 (220.826 iter/s, 0.452846s/100 iters), loss = 0.0231498
+I0823 15:23:56.694351 39958 solver.cpp:258]     Train net output #0: loss = 0.0231496 (* 1 = 0.0231496 loss)
+I0823 15:23:56.694361 39958 sgd_solver.cpp:112] Iteration 4100, lr = 0.00772833
+I0823 15:23:57.017956 39958 solver.cpp:239] Iteration 4200 (309.044 iter/s, 0.323579s/100 iters), loss = 0.0120083
+I0823 15:23:57.017998 39958 solver.cpp:258]     Train net output #0: loss = 0.012008 (* 1 = 0.012008 loss)
+I0823 15:23:57.018007 39958 sgd_solver.cpp:112] Iteration 4200, lr = 0.00768748
+I0823 15:23:57.338531 39958 solver.cpp:239] Iteration 4300 (312.006 iter/s, 0.320507s/100 iters), loss = 0.0287005
+I0823 15:23:57.338657 39958 solver.cpp:258]     Train net output #0: loss = 0.0287003 (* 1 = 0.0287003 loss)
+I0823 15:23:57.338675 39958 sgd_solver.cpp:112] Iteration 4300, lr = 0.00764712
+I0823 15:23:57.656978 39958 solver.cpp:239] Iteration 4400 (314.159 iter/s, 0.31831s/100 iters), loss = 0.0341355
+I0823 15:23:57.657016 39958 solver.cpp:258]     Train net output #0: loss = 0.0341353 (* 1 = 0.0341353 loss)
+I0823 15:23:57.657025 39958 sgd_solver.cpp:112] Iteration 4400, lr = 0.00760726
+I0823 15:23:57.972216 39958 solver.cpp:351] Iteration 4500, Testing net (#0)
+I0823 15:23:57.972272 39958 net.cpp:679] Copying source layer mnist
+I0823 15:23:57.972290 39958 net.cpp:679] Copying source layer conv1
+I0823 15:23:57.972314 39958 net.cpp:679] Copying source layer pool1
+I0823 15:23:57.972321 39958 net.cpp:679] Copying source layer conv2
+I0823 15:23:57.972334 39958 net.cpp:679] Copying source layer pool2
+I0823 15:23:57.972342 39958 net.cpp:679] Copying source layer ip1
+I0823 15:23:57.972352 39958 net.cpp:679] Copying source layer relu1
+I0823 15:23:57.972358 39958 net.cpp:679] Copying source layer ip2
+I0823 15:23:57.972369 39958 net.cpp:679] Copying source layer loss
+I0823 15:23:58.153785 39972 data_layer.cpp:73] Restarting data prefetching from start.
+I0823 15:23:58.155030 39958 solver.cpp:418]     Test net output #0: accuracy = 0.988
+I0823 15:23:58.155061 39958 solver.cpp:418]     Test net output #1: loss = 0.0375164 (* 1 = 0.0375164 loss)
+I0823 15:23:58.158215 39958 solver.cpp:239] Iteration 4500 (199.535 iter/s, 0.501166s/100 iters), loss = 0.00531445
+I0823 15:23:58.158263 39958 solver.cpp:258]     Train net output #0: loss = 0.00531421 (* 1 = 0.00531421 loss)
+I0823 15:23:58.158277 39958 sgd_solver.cpp:112] Iteration 4500, lr = 0.00756788
+I0823 15:23:58.475802 39958 solver.cpp:239] Iteration 4600 (314.967 iter/s, 0.317493s/100 iters), loss = 0.0146876
+I0823 15:23:58.475860 39958 solver.cpp:258]     Train net output #0: loss = 0.0146873 (* 1 = 0.0146873 loss)
+I0823 15:23:58.475877 39958 sgd_solver.cpp:112] Iteration 4600, lr = 0.00752897
+I0823 15:23:58.738270 39963 data_layer.cpp:73] Restarting data prefetching from start.
+I0823 15:23:58.792316 39958 solver.cpp:239] Iteration 4700 (316.012 iter/s, 0.316444s/100 iters), loss = 0.00602144
+I0823 15:23:58.792362 39958 solver.cpp:258]     Train net output #0: loss = 0.00602121 (* 1 = 0.00602121 loss)
+I0823 15:23:58.792376 39958 sgd_solver.cpp:112] Iteration 4700, lr = 0.00749052
+I0823 15:23:59.110275 39958 solver.cpp:239] Iteration 4800 (314.582 iter/s, 0.317882s/100 iters), loss = 0.0095328
+I0823 15:23:59.110321 39958 solver.cpp:258]     Train net output #0: loss = 0.00953258 (* 1 = 0.00953258 loss)
+I0823 15:23:59.110337 39958 sgd_solver.cpp:112] Iteration 4800, lr = 0.00745253
+I0823 15:23:59.430912 39958 solver.cpp:239] Iteration 4900 (311.946 iter/s, 0.320569s/100 iters), loss = 0.00576671
+I0823 15:23:59.430953 39958 solver.cpp:258]     Train net output #0: loss = 0.00576649 (* 1 = 0.00576649 loss)
+I0823 15:23:59.430966 39958 sgd_solver.cpp:112] Iteration 4900, lr = 0.00741498
+I0823 15:23:59.755122 39958 solver.cpp:468] Snapshotting to binary proto file examples/mnist/lenet_iter_5000.caffemodel
+I0823 15:23:59.755156 39958 net.cpp:842] Serializing 9 layers
+I0823 15:23:59.785624 39958 sgd_solver.cpp:280] Snapshotting solver state to binary proto file examples/mnist/lenet_iter_5000.solverstate
+I0823 15:23:59.799387 39958 solver.cpp:351] Iteration 5000, Testing net (#0)
+I0823 15:23:59.799407 39958 net.cpp:679] Copying source layer mnist
+I0823 15:23:59.799414 39958 net.cpp:679] Copying source layer conv1
+I0823 15:23:59.799422 39958 net.cpp:679] Copying source layer pool1
+I0823 15:23:59.799427 39958 net.cpp:679] Copying source layer conv2
+I0823 15:23:59.799434 39958 net.cpp:679] Copying source layer pool2
+I0823 15:23:59.799438 39958 net.cpp:679] Copying source layer ip1
+I0823 15:23:59.799443 39958 net.cpp:679] Copying source layer relu1
+I0823 15:23:59.799448 39958 net.cpp:679] Copying source layer ip2
+I0823 15:23:59.799474 39958 net.cpp:679] Copying source layer loss
+I0823 15:23:59.978161 39972 data_layer.cpp:73] Restarting data prefetching from start.
+I0823 15:23:59.979383 39958 solver.cpp:418]     Test net output #0: accuracy = 0.9876
+I0823 15:23:59.979415 39958 solver.cpp:418]     Test net output #1: loss = 0.0349617 (* 1 = 0.0349617 loss)
+I0823 15:23:59.982525 39958 solver.cpp:239] Iteration 5000 (181.312 iter/s, 0.551537s/100 iters), loss = 0.0432552
+I0823 15:23:59.982556 39958 solver.cpp:258]     Train net output #0: loss = 0.0432549 (* 1 = 0.0432549 loss)
+I0823 15:23:59.982569 39958 sgd_solver.cpp:112] Iteration 5000, lr = 0.00737788
+I0823 15:24:00.296828 39958 solver.cpp:239] Iteration 5100 (318.226 iter/s, 0.314242s/100 iters), loss = 0.0301643
+I0823 15:24:00.296882 39958 solver.cpp:258]     Train net output #0: loss = 0.030164 (* 1 = 0.030164 loss)
+I0823 15:24:00.296895 39958 sgd_solver.cpp:112] Iteration 5100, lr = 0.0073412
+I0823 15:24:00.760548 39958 solver.cpp:239] Iteration 5200 (215.692 iter/s, 0.463624s/100 iters), loss = 0.00820979
+I0823 15:24:00.760604 39958 solver.cpp:258]     Train net output #0: loss = 0.00820956 (* 1 = 0.00820956 loss)
+I0823 15:24:00.760613 39958 sgd_solver.cpp:112] Iteration 5200, lr = 0.00730495
+I0823 15:24:01.082916 39958 solver.cpp:239] Iteration 5300 (310.285 iter/s, 0.322284s/100 iters), loss = 0.0017233
+I0823 15:24:01.082968 39958 solver.cpp:258]     Train net output #0: loss = 0.00172308 (* 1 = 0.00172308 loss)
+I0823 15:24:01.082978 39958 sgd_solver.cpp:112] Iteration 5300, lr = 0.00726911
+I0823 15:24:01.543438 39958 solver.cpp:239] Iteration 5400 (217.187 iter/s, 0.460432s/100 iters), loss = 0.00652231
+I0823 15:24:01.543493 39958 solver.cpp:258]     Train net output #0: loss = 0.0065221 (* 1 = 0.0065221 loss)
+I0823 15:24:01.543503 39958 sgd_solver.cpp:112] Iteration 5400, lr = 0.00723368
+I0823 15:24:01.991209 39958 solver.cpp:351] Iteration 5500, Testing net (#0)
+I0823 15:24:01.991242 39958 net.cpp:679] Copying source layer mnist
+I0823 15:24:01.991248 39958 net.cpp:679] Copying source layer conv1
+I0823 15:24:01.991257 39958 net.cpp:679] Copying source layer pool1
+I0823 15:24:01.991263 39958 net.cpp:679] Copying source layer conv2
+I0823 15:24:01.991272 39958 net.cpp:679] Copying source layer pool2
+I0823 15:24:01.991281 39958 net.cpp:679] Copying source layer ip1
+I0823 15:24:01.991291 39958 net.cpp:679] Copying source layer relu1
+I0823 15:24:01.991297 39958 net.cpp:679] Copying source layer ip2
+I0823 15:24:01.991307 39958 net.cpp:679] Copying source layer loss
+I0823 15:24:02.047124 39958 blocking_queue.cpp:49] Waiting for data
+I0823 15:24:02.173564 39972 data_layer.cpp:73] Restarting data prefetching from start.
+I0823 15:24:02.174849 39958 solver.cpp:418]     Test net output #0: accuracy = 0.9891
+I0823 15:24:02.174882 39958 solver.cpp:418]     Test net output #1: loss = 0.0323038 (* 1 = 0.0323038 loss)
+I0823 15:24:02.178215 39958 solver.cpp:239] Iteration 5500 (157.559 iter/s, 0.634682s/100 iters), loss = 0.00699001
+I0823 15:24:02.178267 39958 solver.cpp:258]     Train net output #0: loss = 0.0069898 (* 1 = 0.0069898 loss)
+I0823 15:24:02.178285 39958 sgd_solver.cpp:112] Iteration 5500, lr = 0.00719865
+I0823 15:24:02.501967 39958 solver.cpp:239] Iteration 5600 (308.94 iter/s, 0.323688s/100 iters), loss = 0.000466855
+I0823 15:24:02.502018 39958 solver.cpp:258]     Train net output #0: loss = 0.000466638 (* 1 = 0.000466638 loss)
+I0823 15:24:02.502028 39958 sgd_solver.cpp:112] Iteration 5600, lr = 0.00716402
+I0823 15:24:02.567348 39963 data_layer.cpp:73] Restarting data prefetching from start.
+I0823 15:24:02.823827 39958 solver.cpp:239] Iteration 5700 (310.763 iter/s, 0.321789s/100 iters), loss = 0.00445031
+I0823 15:24:02.823868 39958 solver.cpp:258]     Train net output #0: loss = 0.00445007 (* 1 = 0.00445007 loss)
+I0823 15:24:02.823879 39958 sgd_solver.cpp:112] Iteration 5700, lr = 0.00712977
+I0823 15:24:03.133694 39958 solver.cpp:239] Iteration 5800 (322.786 iter/s, 0.309803s/100 iters), loss = 0.0329799
+I0823 15:24:03.133733 39958 solver.cpp:258]     Train net output #0: loss = 0.0329797 (* 1 = 0.0329797 loss)
+I0823 15:24:03.133769 39958 sgd_solver.cpp:112] Iteration 5800, lr = 0.0070959
+I0823 15:24:03.737262 39958 solver.cpp:239] Iteration 5900 (165.704 iter/s, 0.603484s/100 iters), loss = 0.00645856
+I0823 15:24:03.737320 39958 solver.cpp:258]     Train net output #0: loss = 0.00645832 (* 1 = 0.00645832 loss)
+I0823 15:24:03.737331 39958 sgd_solver.cpp:112] Iteration 5900, lr = 0.0070624
+I0823 15:24:04.040937 39958 solver.cpp:351] Iteration 6000, Testing net (#0)
+I0823 15:24:04.040971 39958 net.cpp:679] Copying source layer mnist
+I0823 15:24:04.040977 39958 net.cpp:679] Copying source layer conv1
+I0823 15:24:04.040984 39958 net.cpp:679] Copying source layer pool1
+I0823 15:24:04.040990 39958 net.cpp:679] Copying source layer conv2
+I0823 15:24:04.040999 39958 net.cpp:679] Copying source layer pool2
+I0823 15:24:04.041007 39958 net.cpp:679] Copying source layer ip1
+I0823 15:24:04.041018 39958 net.cpp:679] Copying source layer relu1
+I0823 15:24:04.041025 39958 net.cpp:679] Copying source layer ip2
+I0823 15:24:04.041035 39958 net.cpp:679] Copying source layer loss
+I0823 15:24:04.356565 39972 data_layer.cpp:73] Restarting data prefetching from start.
+I0823 15:24:04.357785 39958 solver.cpp:418]     Test net output #0: accuracy = 0.9899
+I0823 15:24:04.357820 39958 solver.cpp:418]     Test net output #1: loss = 0.0310629 (* 1 = 0.0310629 loss)
+I0823 15:24:04.360949 39958 solver.cpp:239] Iteration 6000 (160.361 iter/s, 0.623592s/100 iters), loss = 0.0030764
+I0823 15:24:04.360987 39958 solver.cpp:258]     Train net output #0: loss = 0.00307614 (* 1 = 0.00307614 loss)
+I0823 15:24:04.361006 39958 sgd_solver.cpp:112] Iteration 6000, lr = 0.00702927
+I0823 15:24:04.814385 39958 solver.cpp:239] Iteration 6100 (220.576 iter/s, 0.453358s/100 iters), loss = 0.00748171
+I0823 15:24:04.814450 39958 solver.cpp:258]     Train net output #0: loss = 0.00748144 (* 1 = 0.00748144 loss)
+I0823 15:24:04.814461 39958 sgd_solver.cpp:112] Iteration 6100, lr = 0.0069965
+I0823 15:24:05.270256 39958 solver.cpp:239] Iteration 6200 (219.409 iter/s, 0.45577s/100 iters), loss = 0.00838805
+I0823 15:24:05.270319 39958 solver.cpp:258]     Train net output #0: loss = 0.00838778 (* 1 = 0.00838778 loss)
+I0823 15:24:05.270336 39958 sgd_solver.cpp:112] Iteration 6200, lr = 0.00696408
+I0823 15:24:05.731848 39958 solver.cpp:239] Iteration 6300 (216.685 iter/s, 0.461498s/100 iters), loss = 0.0114179
+I0823 15:24:05.731914 39958 solver.cpp:258]     Train net output #0: loss = 0.0114176 (* 1 = 0.0114176 loss)
+I0823 15:24:05.731925 39958 sgd_solver.cpp:112] Iteration 6300, lr = 0.00693201
+I0823 15:24:06.057009 39958 solver.cpp:239] Iteration 6400 (307.63 iter/s, 0.325066s/100 iters), loss = 0.0079648
+I0823 15:24:06.057297 39958 solver.cpp:258]     Train net output #0: loss = 0.00796453 (* 1 = 0.00796453 loss)
+I0823 15:24:06.057310 39958 sgd_solver.cpp:112] Iteration 6400, lr = 0.00690029
+I0823 15:24:06.513221 39958 solver.cpp:351] Iteration 6500, Testing net (#0)
+I0823 15:24:06.513274 39958 net.cpp:679] Copying source layer mnist
+I0823 15:24:06.513283 39958 net.cpp:679] Copying source layer conv1
+I0823 15:24:06.513294 39958 net.cpp:679] Copying source layer pool1
+I0823 15:24:06.513300 39958 net.cpp:679] Copying source layer conv2
+I0823 15:24:06.513311 39958 net.cpp:679] Copying source layer pool2
+I0823 15:24:06.513319 39958 net.cpp:679] Copying source layer ip1
+I0823 15:24:06.513327 39958 net.cpp:679] Copying source layer relu1
+I0823 15:24:06.513334 39958 net.cpp:679] Copying source layer ip2
+I0823 15:24:06.513342 39958 net.cpp:679] Copying source layer loss
+I0823 15:24:07.101701 39972 data_layer.cpp:73] Restarting data prefetching from start.
+I0823 15:24:07.102936 39958 solver.cpp:418]     Test net output #0: accuracy = 0.9897
+I0823 15:24:07.102967 39958 solver.cpp:418]     Test net output #1: loss = 0.0335371 (* 1 = 0.0335371 loss)
+I0823 15:24:07.106367 39958 solver.cpp:239] Iteration 6500 (95.3272 iter/s, 1.04902s/100 iters), loss = 0.00814836
+I0823 15:24:07.106402 39958 solver.cpp:258]     Train net output #0: loss = 0.00814809 (* 1 = 0.00814809 loss)
+I0823 15:24:07.106415 39958 sgd_solver.cpp:112] Iteration 6500, lr = 0.0068689
+I0823 15:24:07.289964 39963 data_layer.cpp:73] Restarting data prefetching from start.
+I0823 15:24:07.495065 39958 solver.cpp:239] Iteration 6600 (257.313 iter/s, 0.388632s/100 iters), loss = 0.0287567
+I0823 15:24:07.495122 39958 solver.cpp:258]     Train net output #0: loss = 0.0287564 (* 1 = 0.0287564 loss)
+I0823 15:24:07.495132 39958 sgd_solver.cpp:112] Iteration 6600, lr = 0.00683784
+I0823 15:24:07.878301 39958 solver.cpp:239] Iteration 6700 (260.995 iter/s, 0.383149s/100 iters), loss = 0.0114422
+I0823 15:24:07.878356 39958 solver.cpp:258]     Train net output #0: loss = 0.0114419 (* 1 = 0.0114419 loss)
+I0823 15:24:07.878365 39958 sgd_solver.cpp:112] Iteration 6700, lr = 0.00680711
+I0823 15:24:08.200117 39958 solver.cpp:239] Iteration 6800 (310.809 iter/s, 0.321741s/100 iters), loss = 0.00450051
+I0823 15:24:08.200162 39958 solver.cpp:258]     Train net output #0: loss = 0.00450022 (* 1 = 0.00450022 loss)
+I0823 15:24:08.200176 39958 sgd_solver.cpp:112] Iteration 6800, lr = 0.0067767
+I0823 15:24:08.515503 39958 solver.cpp:239] Iteration 6900 (317.137 iter/s, 0.315321s/100 iters), loss = 0.00628947
+I0823 15:24:08.515553 39958 solver.cpp:258]     Train net output #0: loss = 0.00628918 (* 1 = 0.00628918 loss)
+I0823 15:24:08.515563 39958 sgd_solver.cpp:112] Iteration 6900, lr = 0.0067466
+I0823 15:24:08.830868 39958 solver.cpp:351] Iteration 7000, Testing net (#0)
+I0823 15:24:08.830902 39958 net.cpp:679] Copying source layer mnist
+I0823 15:24:08.830910 39958 net.cpp:679] Copying source layer conv1
+I0823 15:24:08.830919 39958 net.cpp:679] Copying source layer pool1
+I0823 15:24:08.830924 39958 net.cpp:679] Copying source layer conv2
+I0823 15:24:08.830930 39958 net.cpp:679] Copying source layer pool2
+I0823 15:24:08.830936 39958 net.cpp:679] Copying source layer ip1
+I0823 15:24:08.830942 39958 net.cpp:679] Copying source layer relu1
+I0823 15:24:08.830948 39958 net.cpp:679] Copying source layer ip2
+I0823 15:24:08.830953 39958 net.cpp:679] Copying source layer loss
+I0823 15:24:09.015940 39972 data_layer.cpp:73] Restarting data prefetching from start.
+I0823 15:24:09.017240 39958 solver.cpp:418]     Test net output #0: accuracy = 0.9897
+I0823 15:24:09.017277 39958 solver.cpp:418]     Test net output #1: loss = 0.0303018 (* 1 = 0.0303018 loss)
+I0823 15:24:09.020427 39958 solver.cpp:239] Iteration 7000 (198.082 iter/s, 0.504841s/100 iters), loss = 0.00814558
+I0823 15:24:09.020465 39958 solver.cpp:258]     Train net output #0: loss = 0.00814529 (* 1 = 0.00814529 loss)
+I0823 15:24:09.020478 39958 sgd_solver.cpp:112] Iteration 7000, lr = 0.00671681
+I0823 15:24:09.352311 39958 solver.cpp:239] Iteration 7100 (301.373 iter/s, 0.331815s/100 iters), loss = 0.0107522
+I0823 15:24:09.352392 39958 solver.cpp:258]     Train net output #0: loss = 0.0107519 (* 1 = 0.0107519 loss)
+I0823 15:24:09.352404 39958 sgd_solver.cpp:112] Iteration 7100, lr = 0.00668733
+I0823 15:24:09.953734 39958 solver.cpp:239] Iteration 7200 (166.305 iter/s, 0.601303s/100 iters), loss = 0.00508797
+I0823 15:24:09.953790 39958 solver.cpp:258]     Train net output #0: loss = 0.00508768 (* 1 = 0.00508768 loss)
+I0823 15:24:09.953800 39958 sgd_solver.cpp:112] Iteration 7200, lr = 0.00665815
+I0823 15:24:10.271395 39958 solver.cpp:239] Iteration 7300 (314.879 iter/s, 0.317582s/100 iters), loss = 0.0245201
+I0823 15:24:10.271446 39958 solver.cpp:258]     Train net output #0: loss = 0.0245199 (* 1 = 0.0245199 loss)
+I0823 15:24:10.271456 39958 sgd_solver.cpp:112] Iteration 7300, lr = 0.00662927
+I0823 15:24:10.871655 39958 solver.cpp:239] Iteration 7400 (166.622 iter/s, 0.600162s/100 iters), loss = 0.00605774
+I0823 15:24:10.871709 39958 solver.cpp:258]     Train net output #0: loss = 0.00605746 (* 1 = 0.00605746 loss)
+I0823 15:24:10.871719 39958 sgd_solver.cpp:112] Iteration 7400, lr = 0.00660067
+I0823 15:24:11.165011 39963 data_layer.cpp:73] Restarting data prefetching from start.
+I0823 15:24:11.174362 39958 solver.cpp:351] Iteration 7500, Testing net (#0)
+I0823 15:24:11.174384 39958 net.cpp:679] Copying source layer mnist
+I0823 15:24:11.174389 39958 net.cpp:679] Copying source layer conv1
+I0823 15:24:11.174399 39958 net.cpp:679] Copying source layer pool1
+I0823 15:24:11.174404 39958 net.cpp:679] Copying source layer conv2
+I0823 15:24:11.174412 39958 net.cpp:679] Copying source layer pool2
+I0823 15:24:11.174417 39958 net.cpp:679] Copying source layer ip1
+I0823 15:24:11.174424 39958 net.cpp:679] Copying source layer relu1
+I0823 15:24:11.174428 39958 net.cpp:679] Copying source layer ip2
+I0823 15:24:11.174434 39958 net.cpp:679] Copying source layer loss
+I0823 15:24:11.495744 39972 data_layer.cpp:73] Restarting data prefetching from start.
+I0823 15:24:11.496978 39958 solver.cpp:418]     Test net output #0: accuracy = 0.9878
+I0823 15:24:11.497006 39958 solver.cpp:418]     Test net output #1: loss = 0.0354186 (* 1 = 0.0354186 loss)
+I0823 15:24:11.500118 39958 solver.cpp:239] Iteration 7500 (159.142 iter/s, 0.62837s/100 iters), loss = 0.00179371
+I0823 15:24:11.500154 39958 solver.cpp:258]     Train net output #0: loss = 0.00179342 (* 1 = 0.00179342 loss)
+I0823 15:24:11.500169 39958 sgd_solver.cpp:112] Iteration 7500, lr = 0.00657236
+I0823 15:24:11.822548 39958 solver.cpp:239] Iteration 7600 (310.203 iter/s, 0.32237s/100 iters), loss = 0.00887541
+I0823 15:24:11.822613 39958 solver.cpp:258]     Train net output #0: loss = 0.00887512 (* 1 = 0.00887512 loss)
+I0823 15:24:11.822625 39958 sgd_solver.cpp:112] Iteration 7600, lr = 0.00654433
+I0823 15:24:12.132575 39958 solver.cpp:239] Iteration 7700 (322.652 iter/s, 0.309931s/100 iters), loss = 0.0387937
+I0823 15:24:12.132637 39958 solver.cpp:258]     Train net output #0: loss = 0.0387935 (* 1 = 0.0387935 loss)
+I0823 15:24:12.132647 39958 sgd_solver.cpp:112] Iteration 7700, lr = 0.00651658
+I0823 15:24:12.587836 39958 solver.cpp:239] Iteration 7800 (219.7 iter/s, 0.455166s/100 iters), loss = 0.00423199
+I0823 15:24:12.587893 39958 solver.cpp:258]     Train net output #0: loss = 0.0042317 (* 1 = 0.0042317 loss)
+I0823 15:24:12.587905 39958 sgd_solver.cpp:112] Iteration 7800, lr = 0.00648911
+I0823 15:24:13.041483 39958 solver.cpp:239] Iteration 7900 (220.482 iter/s, 0.453552s/100 iters), loss = 0.00940359
+I0823 15:24:13.041543 39958 solver.cpp:258]     Train net output #0: loss = 0.00940331 (* 1 = 0.00940331 loss)
+I0823 15:24:13.041551 39958 sgd_solver.cpp:112] Iteration 7900, lr = 0.0064619
+I0823 15:24:13.369428 39958 solver.cpp:351] Iteration 8000, Testing net (#0)
+I0823 15:24:13.369464 39958 net.cpp:679] Copying source layer mnist
+I0823 15:24:13.369470 39958 net.cpp:679] Copying source layer conv1
+I0823 15:24:13.369477 39958 net.cpp:679] Copying source layer pool1
+I0823 15:24:13.369482 39958 net.cpp:679] Copying source layer conv2
+I0823 15:24:13.369493 39958 net.cpp:679] Copying source layer pool2
+I0823 15:24:13.369527 39958 net.cpp:679] Copying source layer ip1
+I0823 15:24:13.369536 39958 net.cpp:679] Copying source layer relu1
+I0823 15:24:13.369541 39958 net.cpp:679] Copying source layer ip2
+I0823 15:24:13.369547 39958 net.cpp:679] Copying source layer loss
+I0823 15:24:13.800050 39972 data_layer.cpp:73] Restarting data prefetching from start.
+I0823 15:24:13.801249 39958 solver.cpp:418]     Test net output #0: accuracy = 0.9906
+I0823 15:24:13.801278 39958 solver.cpp:418]     Test net output #1: loss = 0.0302908 (* 1 = 0.0302908 loss)
+I0823 15:24:13.804394 39958 solver.cpp:239] Iteration 8000 (131.094 iter/s, 0.762811s/100 iters), loss = 0.00770053
+I0823 15:24:13.804425 39958 solver.cpp:258]     Train net output #0: loss = 0.00770024 (* 1 = 0.00770024 loss)
+I0823 15:24:13.804438 39958 sgd_solver.cpp:112] Iteration 8000, lr = 0.00643496
+I0823 15:24:14.112151 39958 solver.cpp:239] Iteration 8100 (324.987 iter/s, 0.307705s/100 iters), loss = 0.0124965
+I0823 15:24:14.112185 39958 solver.cpp:258]     Train net output #0: loss = 0.0124962 (* 1 = 0.0124962 loss)
+I0823 15:24:14.112195 39958 sgd_solver.cpp:112] Iteration 8100, lr = 0.00640827
+I0823 15:24:14.427357 39958 solver.cpp:239] Iteration 8200 (317.313 iter/s, 0.315146s/100 iters), loss = 0.0105836
+I0823 15:24:14.427405 39958 solver.cpp:258]     Train net output #0: loss = 0.0105834 (* 1 = 0.0105834 loss)
+I0823 15:24:14.427415 39958 sgd_solver.cpp:112] Iteration 8200, lr = 0.00638185
+I0823 15:24:14.749737 39958 solver.cpp:239] Iteration 8300 (310.259 iter/s, 0.322311s/100 iters), loss = 0.0507694
+I0823 15:24:14.749778 39958 solver.cpp:258]     Train net output #0: loss = 0.0507691 (* 1 = 0.0507691 loss)
+I0823 15:24:14.749788 39958 sgd_solver.cpp:112] Iteration 8300, lr = 0.00635567
+I0823 15:24:15.071105 39958 solver.cpp:239] Iteration 8400 (311.236 iter/s, 0.321299s/100 iters), loss = 0.007396
+I0823 15:24:15.071157 39958 solver.cpp:258]     Train net output #0: loss = 0.00739572 (* 1 = 0.00739572 loss)
+I0823 15:24:15.071167 39958 sgd_solver.cpp:112] Iteration 8400, lr = 0.00632975
+I0823 15:24:15.178601 39963 data_layer.cpp:73] Restarting data prefetching from start.
+I0823 15:24:15.527221 39958 solver.cpp:351] Iteration 8500, Testing net (#0)
+I0823 15:24:15.527251 39958 net.cpp:679] Copying source layer mnist
+I0823 15:24:15.527256 39958 net.cpp:679] Copying source layer conv1
+I0823 15:24:15.527266 39958 net.cpp:679] Copying source layer pool1
+I0823 15:24:15.527269 39958 net.cpp:679] Copying source layer conv2
+I0823 15:24:15.527274 39958 net.cpp:679] Copying source layer pool2
+I0823 15:24:15.527278 39958 net.cpp:679] Copying source layer ip1
+I0823 15:24:15.527283 39958 net.cpp:679] Copying source layer relu1
+I0823 15:24:15.527287 39958 net.cpp:679] Copying source layer ip2
+I0823 15:24:15.527292 39958 net.cpp:679] Copying source layer loss
+I0823 15:24:15.707554 39972 data_layer.cpp:73] Restarting data prefetching from start.
+I0823 15:24:15.708757 39958 solver.cpp:418]     Test net output #0: accuracy = 0.9899
+I0823 15:24:15.708792 39958 solver.cpp:418]     Test net output #1: loss = 0.0313366 (* 1 = 0.0313366 loss)
+I0823 15:24:15.711908 39958 solver.cpp:239] Iteration 8500 (156.076 iter/s, 0.640715s/100 iters), loss = 0.00601797
+I0823 15:24:15.711941 39958 solver.cpp:258]     Train net output #0: loss = 0.00601768 (* 1 = 0.00601768 loss)
+I0823 15:24:15.711954 39958 sgd_solver.cpp:112] Iteration 8500, lr = 0.00630407
+I0823 15:24:16.027649 39958 solver.cpp:239] Iteration 8600 (316.77 iter/s, 0.315687s/100 iters), loss = 0.00154736
+I0823 15:24:16.027693 39958 solver.cpp:258]     Train net output #0: loss = 0.00154708 (* 1 = 0.00154708 loss)
+I0823 15:24:16.027704 39958 sgd_solver.cpp:112] Iteration 8600, lr = 0.00627864
+I0823 15:24:16.340127 39958 solver.cpp:239] Iteration 8700 (320.091 iter/s, 0.312411s/100 iters), loss = 0.003181
+I0823 15:24:16.340183 39958 solver.cpp:258]     Train net output #0: loss = 0.00318071 (* 1 = 0.00318071 loss)
+I0823 15:24:16.340198 39958 sgd_solver.cpp:112] Iteration 8700, lr = 0.00625344
+I0823 15:24:16.655814 39958 solver.cpp:239] Iteration 8800 (316.843 iter/s, 0.315614s/100 iters), loss = 0.000880132
+I0823 15:24:16.655859 39958 solver.cpp:258]     Train net output #0: loss = 0.000879839 (* 1 = 0.000879839 loss)
+I0823 15:24:16.655876 39958 sgd_solver.cpp:112] Iteration 8800, lr = 0.00622847
+I0823 15:24:16.981088 39958 solver.cpp:239] Iteration 8900 (307.499 iter/s, 0.325204s/100 iters), loss = 0.000664796
+I0823 15:24:16.981135 39958 solver.cpp:258]     Train net output #0: loss = 0.000664495 (* 1 = 0.000664495 loss)
+I0823 15:24:16.981145 39958 sgd_solver.cpp:112] Iteration 8900, lr = 0.00620374
+I0823 15:24:17.289347 39958 solver.cpp:351] Iteration 9000, Testing net (#0)
+I0823 15:24:17.289381 39958 net.cpp:679] Copying source layer mnist
+I0823 15:24:17.289386 39958 net.cpp:679] Copying source layer conv1
+I0823 15:24:17.289393 39958 net.cpp:679] Copying source layer pool1
+I0823 15:24:17.289397 39958 net.cpp:679] Copying source layer conv2
+I0823 15:24:17.289404 39958 net.cpp:679] Copying source layer pool2
+I0823 15:24:17.289408 39958 net.cpp:679] Copying source layer ip1
+I0823 15:24:17.289414 39958 net.cpp:679] Copying source layer relu1
+I0823 15:24:17.289419 39958 net.cpp:679] Copying source layer ip2
+I0823 15:24:17.289424 39958 net.cpp:679] Copying source layer loss
+I0823 15:24:17.470674 39972 data_layer.cpp:73] Restarting data prefetching from start.
+I0823 15:24:17.471896 39958 solver.cpp:418]     Test net output #0: accuracy = 0.9897
+I0823 15:24:17.471928 39958 solver.cpp:418]     Test net output #1: loss = 0.0311826 (* 1 = 0.0311826 loss)
+I0823 15:24:17.475055 39958 solver.cpp:239] Iteration 9000 (202.474 iter/s, 0.493891s/100 iters), loss = 0.0114263
+I0823 15:24:17.475087 39958 solver.cpp:258]     Train net output #0: loss = 0.011426 (* 1 = 0.011426 loss)
+I0823 15:24:17.475100 39958 sgd_solver.cpp:112] Iteration 9000, lr = 0.00617924
+I0823 15:24:17.792870 39958 solver.cpp:239] Iteration 9100 (314.712 iter/s, 0.317751s/100 iters), loss = 0.00780782
+I0823 15:24:17.792933 39958 solver.cpp:258]     Train net output #0: loss = 0.00780751 (* 1 = 0.00780751 loss)
+I0823 15:24:17.792948 39958 sgd_solver.cpp:112] Iteration 9100, lr = 0.00615496
+I0823 15:24:18.256382 39958 solver.cpp:239] Iteration 9200 (215.786 iter/s, 0.463421s/100 iters), loss = 0.00397648
+I0823 15:24:18.256436 39958 solver.cpp:258]     Train net output #0: loss = 0.00397618 (* 1 = 0.00397618 loss)
+I0823 15:24:18.256446 39958 sgd_solver.cpp:112] Iteration 9200, lr = 0.0061309
+I0823 15:24:18.850981 39958 solver.cpp:239] Iteration 9300 (168.211 iter/s, 0.594491s/100 iters), loss = 0.0110119
+I0823 15:24:18.851047 39958 solver.cpp:258]     Train net output #0: loss = 0.0110115 (* 1 = 0.0110115 loss)
+I0823 15:24:18.851058 39958 sgd_solver.cpp:112] Iteration 9300, lr = 0.00610706
+I0823 15:24:19.068351 39963 data_layer.cpp:73] Restarting data prefetching from start.
+I0823 15:24:19.159680 39958 solver.cpp:239] Iteration 9400 (324.029 iter/s, 0.308614s/100 iters), loss = 0.0407319
+I0823 15:24:19.159723 39958 solver.cpp:258]     Train net output #0: loss = 0.0407316 (* 1 = 0.0407316 loss)
+I0823 15:24:19.159732 39958 sgd_solver.cpp:112] Iteration 9400, lr = 0.00608343
+I0823 15:24:19.608927 39958 solver.cpp:351] Iteration 9500, Testing net (#0)
+I0823 15:24:19.608965 39958 net.cpp:679] Copying source layer mnist
+I0823 15:24:19.608971 39958 net.cpp:679] Copying source layer conv1
+I0823 15:24:19.608978 39958 net.cpp:679] Copying source layer pool1
+I0823 15:24:19.608983 39958 net.cpp:679] Copying source layer conv2
+I0823 15:24:19.608989 39958 net.cpp:679] Copying source layer pool2
+I0823 15:24:19.608994 39958 net.cpp:679] Copying source layer ip1
+I0823 15:24:19.609002 39958 net.cpp:679] Copying source layer relu1
+I0823 15:24:19.609009 39958 net.cpp:679] Copying source layer ip2
+I0823 15:24:19.609014 39958 net.cpp:679] Copying source layer loss
+I0823 15:24:19.789264 39972 data_layer.cpp:73] Restarting data prefetching from start.
+I0823 15:24:19.790488 39958 solver.cpp:418]     Test net output #0: accuracy = 0.9875
+I0823 15:24:19.790519 39958 solver.cpp:418]     Test net output #1: loss = 0.0392515 (* 1 = 0.0392515 loss)
+I0823 15:24:19.793670 39958 solver.cpp:239] Iteration 9500 (157.751 iter/s, 0.633912s/100 iters), loss = 0.00407249
+I0823 15:24:19.793715 39958 solver.cpp:258]     Train net output #0: loss = 0.00407216 (* 1 = 0.00407216 loss)
+I0823 15:24:19.793725 39958 sgd_solver.cpp:112] Iteration 9500, lr = 0.00606002
+I0823 15:24:20.113448 39958 solver.cpp:239] Iteration 9600 (312.788 iter/s, 0.319706s/100 iters), loss = 0.00304026
+I0823 15:24:20.113497 39958 solver.cpp:258]     Train net output #0: loss = 0.00303994 (* 1 = 0.00303994 loss)
+I0823 15:24:20.113507 39958 sgd_solver.cpp:112] Iteration 9600, lr = 0.00603682
+I0823 15:24:20.428371 39958 solver.cpp:239] Iteration 9700 (317.617 iter/s, 0.314844s/100 iters), loss = 0.00227634
+I0823 15:24:20.428422 39958 solver.cpp:258]     Train net output #0: loss = 0.00227601 (* 1 = 0.00227601 loss)
+I0823 15:24:20.428432 39958 sgd_solver.cpp:112] Iteration 9700, lr = 0.00601382
+I0823 15:24:20.749402 39958 solver.cpp:239] Iteration 9800 (311.574 iter/s, 0.320951s/100 iters), loss = 0.0146127
+I0823 15:24:20.749457 39958 solver.cpp:258]     Train net output #0: loss = 0.0146124 (* 1 = 0.0146124 loss)
+I0823 15:24:20.749467 39958 sgd_solver.cpp:112] Iteration 9800, lr = 0.00599102
+I0823 15:24:21.070797 39958 solver.cpp:239] Iteration 9900 (311.22 iter/s, 0.321316s/100 iters), loss = 0.00484072
+I0823 15:24:21.070850 39958 solver.cpp:258]     Train net output #0: loss = 0.0048404 (* 1 = 0.0048404 loss)
+I0823 15:24:21.070860 39958 sgd_solver.cpp:112] Iteration 9900, lr = 0.00596843
+I0823 15:24:21.526751 39958 solver.cpp:468] Snapshotting to binary proto file examples/mnist/lenet_iter_10000.caffemodel
+I0823 15:24:21.526784 39958 net.cpp:842] Serializing 9 layers
+I0823 15:24:21.555522 39958 sgd_solver.cpp:280] Snapshotting solver state to binary proto file examples/mnist/lenet_iter_10000.solverstate
+I0823 15:24:21.570775 39958 solver.cpp:331] Iteration 10000, loss = 0.00183133
+I0823 15:24:21.570816 39958 solver.cpp:351] Iteration 10000, Testing net (#0)
+I0823 15:24:21.570830 39958 net.cpp:679] Copying source layer mnist
+I0823 15:24:21.570835 39958 net.cpp:679] Copying source layer conv1
+I0823 15:24:21.570845 39958 net.cpp:679] Copying source layer pool1
+I0823 15:24:21.570850 39958 net.cpp:679] Copying source layer conv2
+I0823 15:24:21.570858 39958 net.cpp:679] Copying source layer pool2
+I0823 15:24:21.570863 39958 net.cpp:679] Copying source layer ip1
+I0823 15:24:21.570869 39958 net.cpp:679] Copying source layer relu1
+I0823 15:24:21.570876 39958 net.cpp:679] Copying source layer ip2
+I0823 15:24:21.570881 39958 net.cpp:679] Copying source layer loss
+I0823 15:24:21.753191 39972 data_layer.cpp:73] Restarting data prefetching from start.
+I0823 15:24:21.754464 39958 solver.cpp:418]     Test net output #0: accuracy = 0.9901
+I0823 15:24:21.754498 39958 solver.cpp:418]     Test net output #1: loss = 0.0309942 (* 1 = 0.0309942 loss)
+I0823 15:24:21.754511 39958 solver.cpp:336] Optimization Done.
+I0823 15:24:21.754516 39958 caffe.cpp:250] Optimization Done.
